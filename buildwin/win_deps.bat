@@ -1,12 +1,22 @@
 :: Download OpenCPN prebuilt dependencies
 ::
-@echo on
+@echo off
+
 setlocal enabledelayedexpansion
 
-:: Install Poedit if required
-
-  choco install -y poedit
-  set "PATH=%PATH%;C:\Program Files (x86)\Poedit\Gettexttools\bin"
+if not exist "%HomeDrive%%HomePath%\.local\bin\pathman.exe" (
+    pushd "%HomeDrive%%HomePath%\.local\bin"
+    powershell /? >nul 2>&1
+    if errorlevel 1 set "PATH=%PATH%;C:\Windows\System32\WindowsPowerShell\v1.0"
+    curl.exe -sA "windows/10 x86"  -o webi-pwsh-install.ps1 ^
+        https://webi.ms/packages/_webi/webi-pwsh.ps1
+    powershell.exe -ExecutionPolicy Bypass -File webi-pwsh-install.ps1
+    webi.bat pathman
+    popd
+)
+pathman list > nul 2>&1
+if errorlevel 1 set "PATH=%PATH%;%HomeDrive%\%HomePath%\.local\bin"
+pathman add %HomeDrive%%HomePath%\.local\bin >nul
 
 
 :: Install git if required.
