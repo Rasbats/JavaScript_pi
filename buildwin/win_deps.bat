@@ -4,11 +4,10 @@
 setlocal enabledelayedexpansion
 
 :: Install Poedit if required
-msgmerge --version >nul 2>&1
-if errorlevel 1 (
+
   choco install -y poedit
   set "PATH=%PATH%;C:\Program Files (x86)\Poedit\Gettexttools\bin"
-)
+
 
 :: Install git if required.
 git --version >nul 2>&1
