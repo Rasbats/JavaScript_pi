@@ -11,7 +11,7 @@
 
 # -------- Cmake setup ---------
 #
-cmake_minimum_required(VERSION 3.12.0)
+cmake_minimum_required(VERSION 3.15.0)
 include(${CMAKE_SOURCE_DIR}/cmake/CmakeSetup.cmake NO_POLICY_SCOPE)
 message(STATUS "Cmake version: ${CMAKE_VERSION}.")
 
@@ -50,6 +50,8 @@ endif ()
 
 set(PACKAGE_NAME ${CMAKE_PROJECT_NAME})
 
+find_package(Gettext REQUIRED)
+
 # Create the minimim ocpn version id string like ov50
 string(REGEX REPLACE "\([0-9]\)\.\([0-9]\).*" "ov\\1\\2"
        OCPN_MIN_VERSION ${API_OCPN_MIN_VERSION})
@@ -76,7 +78,7 @@ if ("${BUILD_TYPE}" STREQUAL "")
   return ()
 endif ()
 
- 
+
 if (NOT ${BUILD_TYPE} STREQUAL "flatpak")
   # Build package as required (flatpak already dealt with).
   #
@@ -92,7 +94,7 @@ if (NOT ${BUILD_TYPE} STREQUAL "flatpak")
   include(PluginLocalization)
 
   include_directories(BEFORE ${CMAKE_BINARY_DIR}/include)
- 
+
   if (COMMAND add_plugin_libraries)
     add_plugin_libraries()
   endif ()
