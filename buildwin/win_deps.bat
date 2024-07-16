@@ -1,123 +1,69 @@
-:: Install build dependencies. Requires a working choco installation,
-:: see https://docs.chocolatey.org/en-us/choco/setup.
+:: Download OpenCPN prebuilt dependencies
 ::
-:: Usage:
-::      win_deps.bat [wx32]
-::
-:: Arguments:
-::     wx32:
-::          If present install dependencies for building against
-::          wxWidgets 3.2. If non-existing or anything but wx32
-::          build using 3.1
-:: Output:
-::     cache\wx-config.bat:
-::          Script which set wxWidgets_LIB_DIR and wxWidgets_ROOT_DIR
-::
-:: Initial run will do choco installs requiring administrative
-:: privileges.
-::
-:: NOTE: at the very end, this script runs refreshenv. This clears the
-:: process's PATH and replaces it with a fresh copy from the
-:: registry. This means that any "set PATH=..." is lost for caller.
-
-:: Install the pathman tool: https://github.com/therootcompany/pathman
-:: Fix PATH so it can be used in this script
-::
-
-@echo off
-
+@echo on
 setlocal enabledelayedexpansion
 
-if not exist "%HomeDrive%%HomePath%\.local\bin\pathman.exe" (
-    pushd "%HomeDrive%%HomePath%\.local\bin"
-    powershell /? >nul 2>&1
-    if errorlevel 1 set "PATH=%PATH%;C:\Windows\System32\WindowsPowerShell\v1.0"
-    curl.exe -sA "windows/10 x86"  -o webi-pwsh-install.ps1 ^
-        https://webi.ms/packages/_webi/webi-pwsh.ps1
-    powershell.exe -ExecutionPolicy Bypass -File webi-pwsh-install.ps1
-    webi.bat pathman
-    popd
-)
-pathman list > nul 2>&1
-if errorlevel 1 set "PATH=%PATH%;%HomeDrive%\%HomePath%\.local\bin"
-pathman add %HomeDrive%%HomePath%\.local\bin >nul
-
-git --version > nul 2>&1
+:: Install Poedit if required
+msgmerge --version >nul 2>&1
 if errorlevel 1 (
-   set "GIT_HOME=C:\Program Files\Git"
-   if not exist "!GIT_HOME!" choco install -y git
-   pathman add !GIT_HOME!\cmd > nul
+  choco install -y poedit
+  set "PATH=%PATH%;C:\Program Files (x86)\Poedit\Gettexttools\bin"
 )
 
-:: Install choco cmake and add it's persistent user path element
-::
-cmake --version > nul 2>&1
+:: Install git if required.
+git --version >nul 2>&1
 if errorlevel 1 (
-  set "CMAKE_HOME=C:\Program Files\CMake"
-  choco install -y cmake
-  pathman add "!CMAKE_HOME!\bin" > nul
-  echo Adding !CMAKE_HOME!\bin to path
+  choco install -y git
+  set "PATH=%PATH%;C:\Program Files\Git\bin"
 )
 
-:: Install choco poedit and add it's persistent user path element
-::
-set "POEDIT_HOME=C:\Program Files (x86)\Poedit\Gettexttools"
-if not exist "%POEDIT_HOME%" choco install -y poedit
-pathman add "%POEDIT_HOME%\bin" > nul
+:: install wget as required
+wget --version >nul 2>&1 || choco install -y wget
 
-:: Update required python stuff
-::
-python --version > nul 2>&1 && python -m ensurepip > nul 2>&1
-if errorlevel 1 choco install -y python
-python --version
-python -m ensurepip
-python -m pip install --upgrade pip
-python -m pip install -q setuptools wheel
-python -m pip install -q cloudsmith-cli
-python -m pip install -q cryptography
+:: If needed, download wxWidgets binary build.
+set "CACHE_DIR=%~dp0..\cache"
+if not exist !CACHE_DIR! (mkdir !CACHE_DIR!)
+set "GITHUB_DL=https://github.com/wxWidgets/wxWidgets/releases/download"
+if not exist cache\wxWidgets-3.2.4 (
+::  wget -nv %GITHUB_DL%/v3.2.1/wxMSW-3.2.1_vc14x_Dev.7z
+::  7z x -y -o%CACHE_DIR%\wxWidgets-3.2.1 wxMSW-3.2.1_vc14x_Dev.7z
+::  wget -nv %GITHUB_DL%/v3.2.1/wxWidgets-3.2.1-headers.7z
+::  7z x -y -o%CACHE_DIR%\wxWidgets-3.2.1 wxWidgets-3.2.1-headers.7z
+::  wget -nv %GITHUB_DL%/v3.2.1/wxMSW-3.2.1_vc14x_ReleaseDLL.7z
+::  7z x -y -o%CACHE_DIR%\wxWidgets-3.2.1 wxMSW-3.2.1_vc14x_ReleaseDLL.7z
+  wget -nv %GITHUB_DL%/v3.2.4/wxMSW-3.2.4_vc14x_Dev.7z
+  7z x -y -o%CACHE_DIR%\wxWidgets-3.2.4 wxMSW-3.2.4_vc14x_Dev.7z
+  wget -nv %GITHUB_DL%/v3.2.4/wxWidgets-3.2.4-headers.7z
+  7z x -y -o%CACHE_DIR%\wxWidgets-3.2.4 wxWidgets-3.2.4-headers.7z
+  wget -nv %GITHUB_DL%/v3.2.4/wxMSW-3.2.4_vc14x_ReleaseDLL.7z
+  7z x -y -o%CACHE_DIR%\wxWidgets-3.2.4 wxMSW-3.2.4_vc14x_ReleaseDLL.7z
+)
+:: Create cache\wx-config.bat, paths to downloaded wxWidgets.
+set "WXWIN=!CACHE_DIR!\wxWidgets-3.2.4"
+echo set "wxWidgets_ROOT_DIR=%WXWIN%" > %CACHE_DIR%\wx-config.bat
+echo set "wxWidgets_LIB_DIR=%WXWIN%\lib\vc14x_dll" >> %CACHE_DIR%\wx-config.bat
 
-::
-:: Install pre-compiled wxWidgets and other DLL; add required paths.
-::
-set SCRIPTDIR=%~dp0
-if "%~1"=="wx32" (
-  set "WXWIN=%SCRIPTDIR%..\cache\wxWidgets-3.2.4"
-  set "wxWidgets_ROOT_DIR=!WXWIN!"
-  set "wxWidgets_LIB_DIR=!WXWIN!\lib\vc14x_dll"
-) else (
-  set "WXWIN=%SCRIPTDIR%..\cache\wxWidgets-3.2.4"
-  set "wxWidgets_ROOT_DIR=!WXWIN!"
-  set "wxWidgets_LIB_DIR=!WXWIN!\lib\vc_dll"
+
+if not exist C:\ProgramData\chocolatey\lib\nsis (
+  echo Installing nsis tools using choco
+  choco install -y nsis
 )
 
-if not exist %SCRIPTDIR%\..\cache ( mkdir %SCRIPTDIR%\..\cache )
-set "CONFIG_FILE=%SCRIPTDIR%\..\cache\wx-config.bat"
-echo set "wxWidgets_ROOT_DIR=%wxWidgets_ROOT_DIR%" > %CONFIG_FILE%
-echo set "wxWidgets_LIB_DIR=%wxWidgets_LIB_DIR%" >> %CONFIG_FILE%
-
-if not exist "%WXWIN%" (
-  wget --version > nul 2>&1 || choco install -y wget
-  if  "%~1"=="wx32" (
-      echo Downloading 3.2.4
-      if not exist  %SCRIPTDIR%..\cache\wxWidgets-3.2.4 (
-          mkdir %SCRIPTDIR%..\cache\wxWidgets-3.2.4
-      )
-      set "GITHUB_DL=https://github.com/wxWidgets/wxWidgets/releases/download"
-      wget -nv !GITHUB_DL!/v3.2.4/wxMSW-3.2.4_vc14x_Dev.7z
-      7z x -o%SCRIPTDIR%..\cache\wxWidgets-3.2.4 wxMSW-3.2.4_vc14x_Dev.7z
-      wget -nv !GITHUB_DL!/v3.2.4/wxWidgets-3.2.4-headers.7z
-      7z x -o%SCRIPTDIR%..\cache\wxWidgets-3.2.4 wxWidgets-3.2.4-headers.7z
-      echo "Patching defs.h [#584]"
-      cmake -Dpatch_dir=%SCRIPTDIR:\=/%/../cache ^
-          -Dpatch_file=%SCRIPTDIR:\=/%/wxwidgets-3.2.4-584.patch ^
-          -P%SCRIPTDIR:\=/%/../cmake/PatchFile.cmake
-  ) else (
-      echo Downloading 3.1.2
-      wget -O wxWidgets-3.1.2.7z -nv ^
-        https://download.opencpn.org/s/E2p4nLDzeqx4SdX/download
-      7z i > nul 2>&1 || choco install -y 7zip
-      7z x wxWidgets-3.1.2.7z -o%WXWIN%
+:: Make sure the pre-compiled libraries are in place
+set "GH_DL_BASE=https://github.com/OpenCPN/OCPNWindowsCoreBuildSupport"
+set "opencpn_support_base=https://dl.cloudsmith.io/public/alec-leamas"
+if not exist %CACHE_DIR%\buildwin\libcurl.dll (
+  wget -nv -O !CACHE_DIR!\OCPNWindowsCoreBuildSupport.zip ^
+      %GH_DL_BASE%/archive/refs/tags/v0.3.zip
+  7z x -y !CACHE_DIR!\OCPNWindowsCoreBuildSupport.zip ^
+      -o%CACHE_DIR%\buildwintemp
+  if not exist !CACHE_DIR!\buildwin (mkdir !CACHE_DIR!\buildwin)
+  xcopy ^
+    !CACHE_DIR!\buildwintemp\OCPNWindowsCoreBuildSupport-0.3\buildwin ^
+    !CACHE_DIR!\buildwin /s /y /q
+  if exist !CACHE_DIR!\buildwin\wxWidgets (
+    rmdir !CACHE_DIR!\buildwin\wxWidgets /s /q
   )
+  wget !opencpn_support_base!/opencpn-support/raw/files/iphlpapi.lib ^
+   -O %CACHE_DIR%\buildwin\iphlpapi.lib
 )
-
-refreshenv

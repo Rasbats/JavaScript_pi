@@ -233,8 +233,8 @@ void ToolsClass::onDump( wxCommandEvent& event ){
     dump += "pJavaScript_pi->m_floatOnTop\t\t\t\t" + (pJavaScript_pi->m_floatOnParent ? _("true"):_("false")) + "\n";
     dump += "pJavaScript_pi->mRememberToggleStatus\t" + (pJavaScript_pi->mRememberToggleStatus ? _("true"):_("false")) + "\n";
     dump += "favouriteFiles:\n";
-    //for (int i = 0; i < pJavaScript_pi->favouriteFiles.GetCount(); i++){
-   //     dump += ("\t" + pJavaScript_pi->favouriteFiles[i] + "\n");}
+    for (int i = 0; i < pJavaScript_pi->favouriteFiles.GetCount(); i++)
+        dump += ("\t" + pJavaScript_pi->favouriteFiles[i] + "\n");
     dump += "recentFiles:\n";
     for (int i = 0; i < pJavaScript_pi->recentFiles.GetCount(); i++)
         dump += ("\t" + pJavaScript_pi->recentFiles[i] + "\n");
