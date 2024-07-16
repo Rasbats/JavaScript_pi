@@ -50,8 +50,6 @@ endif ()
 
 set(PACKAGE_NAME ${CMAKE_PROJECT_NAME})
 
-find_package(Gettext REQUIRED)
-
 # Create the minimim ocpn version id string like ov50
 string(REGEX REPLACE "\([0-9]\)\.\([0-9]\).*" "ov\\1\\2"
        OCPN_MIN_VERSION ${API_OCPN_MIN_VERSION})
