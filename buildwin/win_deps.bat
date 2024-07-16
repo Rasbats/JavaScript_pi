@@ -10,7 +10,7 @@ if not exist "%HomeDrive%%HomePath%\.local\bin\pathman.exe" (
     popd
 )
 pathman list > nul 2>&1
-if errorlevel 1 set "PATH=%PATH%;%HomeDrive%\%HomePath%\.local\bin"
+if errorlevel 1 set "PATH=%PATH%;%HomeDrive%%HomePath%\.local\bin"
 pathman add %HomeDrive%%HomePath%\.local\bin >nul
 
 
