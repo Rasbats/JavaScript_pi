@@ -133,16 +133,16 @@ ToolsClassBase::ToolsClassBase( wxWindow* parent, wxWindowID id, const wxString&
 	sbSizer18->SetMinSize( wxSize( -1,70 ) );
 	m_floatOnParent = new wxCheckBox( sbSizer18->GetStaticBox(), wxID_ANY, wxT("Float consoles on top"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_floatOnParent->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
-	m_floatOnParent->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
-	m_floatOnParent->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );
+	m_floatOnParent->SetForegroundColour( wxColour( 0, 0, 0 ) );
+	m_floatOnParent->SetBackgroundColour( wxColour( 255, 255, 255 ) );
 
 	sbSizer18->Add( m_floatOnParent, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
 	m_rememberToggleStatus = new wxCheckBox( sbSizer18->GetStaticBox(), wxID_ANY, wxT("Remember toggle status"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_rememberToggleStatus->SetValue(true);
 	m_rememberToggleStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
-	m_rememberToggleStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
-	m_rememberToggleStatus->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );
+	m_rememberToggleStatus->SetForegroundColour( wxColour( 0, 0, 0 ) );
+	m_rememberToggleStatus->SetBackgroundColour( wxColour( 255, 255, 255 ) );
 
 	sbSizer18->Add( m_rememberToggleStatus, 0, wxALL, 5 );
 
@@ -158,7 +158,7 @@ ToolsClassBase::ToolsClassBase( wxWindow* parent, wxWindowID id, const wxString&
 
 	Consoles->SetSizer( ConsolesSizer );
 	Consoles->Layout();
-	m_notebook->AddPage( Consoles, wxT("Consoles"), false );
+	m_notebook->AddPage( Consoles, wxT("Consoles"), true );
 	Directory = new wxPanel( m_notebook, wxID_ANY, wxDefaultPosition, wxSize( 590,150 ), 0 );
 	Directory->SetFont( wxFont( 13, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Lucida Grande") ) );
 	Directory->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
@@ -295,7 +295,7 @@ ToolsClassBase::ToolsClassBase( wxWindow* parent, wxWindowID id, const wxString&
 
 	Message->SetSizer( MessageSizer );
 	Message->Layout();
-	m_notebook->AddPage( Message, wxT("Message"), true );
+	m_notebook->AddPage( Message, wxT("Message"), false );
 	Parking = new wxPanel( m_notebook, wxID_ANY, wxDefaultPosition, wxSize( 590,300 ), wxTAB_TRAVERSAL );
 	Parking->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
 	Parking->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
