@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b)
+// C++ code generated with wxFormBuilder (version 4.2.1-0-g80c4cb6)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -129,7 +129,7 @@ ToolsClassBase::ToolsClassBase( wxWindow* parent, wxWindowID id, const wxString&
 
 	m_rememberToggleStatus = new wxCheckBox( sbSizer18->GetStaticBox(), wxID_ANY, wxT("Remember toggle status"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_rememberToggleStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString ) );
-	m_rememberToggleStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	m_rememberToggleStatus->SetForegroundColour( wxColour( 255, 255, 255 ) );
 	m_rememberToggleStatus->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_ACTIVECAPTION ) );
 
 	sbSizer18->Add( m_rememberToggleStatus, 0, wxALL, 5 );
