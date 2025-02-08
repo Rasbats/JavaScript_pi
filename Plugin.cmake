@@ -13,16 +13,16 @@
 # -------- Options ----------
 
 set(OCPN_TEST_REPO
-    "opencpn/javascript-alpha"
+    "mike-rossiter/javascript-alpha"
     CACHE STRING "Default repository for untagged builds"
 )
 set(OCPN_BETA_REPO
-    "opencpn/javascript-beta"
+    "mike-rossiter/javascript-beta"
     CACHE STRING
     "Default repository for tagged builds matching 'beta'"
 )
 set(OCPN_RELEASE_REPO
-    "opencpn/javascript-prod"
+    "mike-rossiter/javascript-prod"
     CACHE STRING
     "Default repository for tagged builds not matching 'beta'"
 )
@@ -52,12 +52,12 @@ set(PKG_HOMEPAGE https://github.com/Antipole2/JavaScript_pi)
 set(PKG_INFO_URL https://opencpn-manuals.github.io/main/javascript/index.html)
 
 SET(SRC
-	src/bitmaps.cpp
-	src/consolePositioning.h
+    src/bitmaps.cpp
+    src/consolePositioning.h
     src/duk_config.h
     src/duktape.cpp
     src/duktape.h
-    src/fileOrganiser.cpp    
+    src/fileOrganiser.cpp
     src/functions.cpp
     src/icons.cpp
     src/icons.h
@@ -103,7 +103,7 @@ macro(add_plugin_libraries)
 
   add_subdirectory("libs/wxJSON")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
-  
+
 #  add_subdirectory("libs/plugingl")
 #  target_link_libraries(${PACKAGE_NAME} ocpn::plugingl)
 
@@ -111,4 +111,3 @@ macro(add_plugin_libraries)
 #   add_subdirectory("libs/jsoncpp")
 #   target_link_libraries(${PACKAGE_NAME} ocpn::jsoncpp)
 endmacro ()
- 
